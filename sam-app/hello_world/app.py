@@ -36,19 +36,29 @@ def lambda_handler(event, context):
 
     db = Database()
     if init_db(db) is not None:
+        # return {
+        #     'statusCode': 200,
+        #     'body': json.dumps({
+        #         'message': 'Connected to Postgres DB'
+        #     })
+        # }
+
+        url_params = event["queryStringParameters"]
+        with db as cursor:
+            cursor.execute(
+                f'SELECT * FROM users WHERE user_id = {int(url_params["user_id"])}'
+            )
+            user = cursor.fetchone()
+
         return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'message': 'Connected to Postgres DB'
-            })
+            "statusCode": 200,
+            "body": json.dumps(user)
         }
-    # with Database() as cursor:
 
     return {
         "statusCode": 500,
         "body": json.dumps({
             "message": "Failed to connect!",
-            # "location": ip.text.replace("\n", "")
         }),
     }
 
