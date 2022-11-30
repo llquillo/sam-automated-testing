@@ -14,25 +14,21 @@ class Database(object):
             self._in_transaction_block = True
             self._cursor = db_cursor
             self._conn = db_cursor.connection
-        # else:
-        #     if environ.get('DB_USER', None) is None or environ.get('DB_PASSWORD', None) is None:
-        #         if 'username' in secret_values and 'password' in secret_values:
-        #             environ['DB_USER'] = secret_values['username']
-        #             environ['DB_PASSWORD'] = secret_values['password']
         self.connect()
 
     def connect(self):
         if self._conn is None:
             conn_str = "host={} dbname={} user={} password={} port={}".format(
-                environ.get('DB_HOST'), environ.get('DB_NAME'), environ.get('DB_USER'), 
-                environ.get('DB_PASSWORD'), environ.get('DB_PORT', '5432')
+                environ.get('DB_HOST'), environ.get('DB_NAME'),
+                environ.get('DB_USER'), environ.get('DB_PASSWORD'),
+                environ.get('DB_PORT', '5432')
             )
             print(conn_str)
             try:
                 self._conn = psycopg2.connect(conn_str)
             except Exception as err:
                 raise err
-            
+
             if self._conn is None:
                 print("Not connected!")
 
@@ -109,6 +105,3 @@ class Database(object):
             if not self._in_transaction_block:
                 self._conn.commit()
         return result
-
-
-

@@ -35,14 +35,8 @@ def lambda_handler(event, context):
     #     raise e
 
     db = Database()
-    if init_db(db) is not None:
-        # return {
-        #     'statusCode': 200,
-        #     'body': json.dumps({
-        #         'message': 'Connected to Postgres DB'
-        #     })
-        # }
 
+    if init_db(db) is not None:
         url_params = event["queryStringParameters"]
         with db as cursor:
             cursor.execute(
